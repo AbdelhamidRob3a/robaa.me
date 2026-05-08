@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abdelhamid Robaa | Terminal CV</title>
+    <title>Robaa OS</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2324273a%22/><text x=%2215%22 y=%2270%22 font-family=%22monospace%22 font-size=%2260%22 fill=%22%238aadf4%22 font-weight=%22bold%22>%3E_</text></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap');
 
-        /* Default (Hacker/Cyberpunk) Theme */
-        :root, [data-theme="hacker"] {
+        /* Hacker Theme */
+        [data-theme="hacker"] {
             --bg-color: #030303;
             --text-main: #00ff41;
             --text-dim: #00a816;
@@ -71,8 +72,8 @@
             --glow-magenta: none;
         }
 
-        /* Catppuccin Macchiato */
-        [data-theme="catppuccin"] {
+        /* Default (Catppuccin Macchiato) */
+        :root, [data-theme="catppuccin"] {
             --bg-color: #24273a;
             --text-main: #cad3f5;
             --text-dim: #5b6078;
@@ -351,6 +352,48 @@
             color: var(--bg-color);
             text-shadow: none;
         }
+
+        /* Responsive Design */
+        @media (max-width: 650px) {
+            #terminal {
+                padding: 1rem;
+            }
+            
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 0.1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .table-key {
+                font-size: 0.9em;
+                opacity: 0.8;
+                border-bottom: 1px solid var(--text-dim);
+                padding-bottom: 0.2rem;
+                margin-bottom: 0.2rem;
+                display: inline-block;
+            }
+
+            .ascii-art {
+                font-size: 9px;
+            }
+
+            .profile-pic-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .prompt-line {
+                flex-wrap: wrap;
+            }
+
+            .command-input-field {
+                width: 100%;
+                flex-basis: 100%;
+                margin-top: 0.4rem;
+                padding-left: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -363,7 +406,7 @@
 
     <script>
         // Load saved theme immediately to prevent flash
-        const savedTheme = localStorage.getItem('terminalTheme') || 'hacker';
+        const savedTheme = localStorage.getItem('terminalTheme') || 'catppuccin';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
         const terminal = document.getElementById('terminal');
@@ -553,7 +596,7 @@
                          '  <span class="yellow">sudo</span>             - Execute a command as superuser';
             } else if (args[0] === 'theme') {
                 if (args.length === 1 || args[1] === 'ls' || args[1] === 'list') {
-                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'hacker';
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'catppuccin';
                     output = '<span class="cyan">Available themes:</span><br>' +
                              '  * <span class="' + (currentTheme === 'hacker' ? 'highlight' : 'dim') + '">hacker</span>' + (currentTheme === 'hacker' ? ' (active)' : '') + '<br>' +
                              '  * <span class="' + (currentTheme === 'dracula' ? 'magenta' : 'dim') + '">dracula</span>' + (currentTheme === 'dracula' ? ' (active)' : '') + '<br>' +
