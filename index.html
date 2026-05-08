@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdelhamid Robaa | Terminal CV</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        /* Default (Hacker/Cyberpunk) Theme */
+        :root, [data-theme="hacker"] {
+            --bg-color: #030303;
+            --text-main: #00ff41;
+            --text-dim: #00a816;
+            --text-highlight: #e0e0e0;
+            --accent-cyan: #08f7fe;
+            --accent-magenta: #fe53bb;
+            --accent-yellow: #f5d300;
+            --error: #ff003c;
+            
+            --glow-main: 0 0 2px rgba(0, 255, 65, 0.2);
+            --glow-cyan: 0 0 3px rgba(8, 247, 254, 0.3);
+            --glow-magenta: 0 0 3px rgba(254, 83, 187, 0.3);
+        }
+
+        /* Dracula Theme */
+        [data-theme="dracula"] {
+            --bg-color: #282a36;
+            --text-main: #f8f8f2;
+            --text-dim: #6272a4;
+            --text-highlight: #ffffff;
+            --accent-cyan: #8be9fd;
+            --accent-magenta: #ff79c6;
+            --accent-yellow: #f1fa8c;
+            --error: #ff5555;
+            
+            --glow-main: none;
+            --glow-cyan: none;
+            --glow-magenta: none;
+        }
+
+        /* Nord Theme */
+        [data-theme="nord"] {
+            --bg-color: #2e3440;
+            --text-main: #d8dee9;
+            --text-dim: #4c566a;
+            --text-highlight: #eceff4;
+            --accent-cyan: #88c0d0;
+            --accent-magenta: #b48ead;
+            --accent-yellow: #ebcb8b;
+            --error: #bf616a;
+            
+            --glow-main: none;
+            --glow-cyan: none;
+            --glow-magenta: none;
+        }
+
+        /* Gruvbox Theme */
+        [data-theme="gruvbox"] {
+            --bg-color: #282828;
+            --text-main: #ebdbb2;
+            --text-dim: #928374;
+            --text-highlight: #fbf1c7;
+            --accent-cyan: #8ec07c;
+            --accent-magenta: #d3869b;
+            --accent-yellow: #fabd2f;
+            --error: #fb4934;
+            
+            --glow-main: none;
+            --glow-cyan: none;
+            --glow-magenta: none;
+        }
+
+        /* Catppuccin Macchiato */
+        [data-theme="catppuccin"] {
+            --bg-color: #24273a;
+            --text-main: #cad3f5;
+            --text-dim: #5b6078;
+            --text-highlight: #f4dbd6;
+            --accent-cyan: #8aadf4;
+            --accent-magenta: #f5bde6;
+            --accent-yellow: #eed49f;
+            --error: #ed8796;
+            
+            --glow-main: none;
+            --glow-cyan: none;
+            --glow-magenta: none;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px; 
+            line-height: 1.65;
+            overflow-x: hidden;
+            text-shadow: var(--glow-main);
+            cursor: text;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* CRT Effects */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .crt-flicker {
+            animation: flicker 0.15s infinite;
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255,255,255,0.01);
+            opacity: 0;
+            z-index: 101;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.02; }
+            50% { opacity: 0.05; }
+            100% { opacity: 0.01; }
+        }
+
+        /* Layout */
+        #terminal {
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 5rem;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .ascii-art {
+            font-family: 'Share Tech Mono', monospace;
+            white-space: pre;
+            color: var(--accent-cyan);
+            text-shadow: var(--glow-cyan);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            font-size: 13px;
+        }
+
+        .dim { color: var(--text-dim); text-shadow: none; }
+        .highlight { color: var(--text-highlight); text-shadow: 0 0 2px rgba(255,255,255,0.3); }
+        .cyan { color: var(--accent-cyan); text-shadow: var(--glow-cyan); }
+        .magenta { color: var(--accent-magenta); text-shadow: var(--glow-magenta); }
+        .yellow { color: var(--accent-yellow); }
+        .error { color: var(--error); }
+
+        /* Components */
+        .prompt-line {
+            display: flex;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .prompt-user { color: var(--accent-magenta); text-shadow: var(--glow-magenta); font-weight: 600; }
+        .prompt-host { color: var(--accent-yellow); font-weight: 600; }
+        .prompt-dir { color: var(--accent-cyan); text-shadow: var(--glow-cyan); font-weight: 600; }
+        .prompt-char { color: var(--text-highlight); margin: 0 0.5rem; }
+
+        .command {
+            color: var(--text-highlight);
+            font-weight: 600;
+        }
+
+        /* Interactive Input Field */
+        .command-input-field {
+            background: transparent;
+            border: none;
+            color: var(--text-highlight);
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: 600;
+            outline: none;
+            flex-grow: 1;
+            text-shadow: var(--glow-main);
+            caret-color: var(--text-main);
+        }
+
+        .command-input-field:disabled {
+            color: var(--text-main);
+            background: transparent;
+        }
+
+        .output-block {
+            margin-bottom: 2.5rem;
+            padding-left: 1rem;
+            border-left: 1px solid var(--text-dim);
+            animation: printLine 0.1s ease-out forwards;
+            word-wrap: break-word;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 170px 1fr;
+            margin-bottom: 0.4rem;
+        }
+
+        .table-key {
+            color: var(--accent-cyan);
+        }
+
+        .table-value {
+            color: var(--text-highlight);
+        }
+
+        .progress-bar {
+            display: inline-block;
+            width: 200px;
+            color: var(--text-dim);
+        }
+        
+        .progress-fill {
+            color: var(--text-main);
+        }
+
+        /* Experience Entry */
+        .exp-entry {
+            margin-bottom: 1.5rem;
+        }
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+        .exp-role { color: var(--accent-yellow); font-weight: 600; }
+        .exp-company { color: var(--accent-magenta); }
+        .exp-date { color: var(--text-dim); font-size: 0.9em; }
+        
+        .exp-details {
+            list-style-type: none;
+            padding-left: 1rem;
+        }
+        .exp-details li::before {
+            content: "> ";
+            color: var(--text-dim);
+        }
+        .exp-details li {
+            margin-bottom: 0.25rem;
+            color: var(--text-highlight);
+        }
+
+        /* Auto-typing Cursor */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: var(--text-main);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        .cursor.typing {
+            animation: none;
+            opacity: 1;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes printLine {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-pic-container {
+            position: relative;
+            display: inline-block;
+            width: 140px;
+            height: 140px;
+            border: 1px solid var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2);
+            display: block;
+        }
+
+        .profile-pic-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--text-main);
+            mix-blend-mode: multiply;
+            opacity: 0.8;
+            pointer-events: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            margin: 0.2rem 0.4rem 0.2rem 0;
+            border: 1px solid currentColor;
+            border-radius: 3px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            opacity: 0.9;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background-color: currentColor;
+            color: var(--bg-color);
+            box-shadow: 0 0 5px currentColor;
+        }
+
+        /* Utilities */
+        .hidden { display: none; }
+        a { color: var(--accent-cyan); text-decoration: none; border-bottom: 1px dashed var(--text-dim); transition: all 0.2s; }
+        a:hover { color: var(--text-main); border-bottom-color: var(--text-main); background: rgba(0, 255, 65, 0.1); }
+        
+        ::selection {
+            background: var(--text-main);
+            color: var(--bg-color);
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="crt-flicker"></div>
+    
+    <div id="terminal">
+        <!-- JS will populate this -->
+    </div>
+
+    <script>
+        // Load saved theme immediately to prevent flash
+        const savedTheme = localStorage.getItem('terminalTheme') || 'hacker';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const terminal = document.getElementById('terminal');
+        let activeInput = null; // Store reference to current input
+        
+        const asciiArt = 
+            '<span class="cyan">    ____  ____  ____  </span><span class="magenta">___    ___ </span>\n' +
+            '<span class="cyan">   / __ \\/ __ \\/ __ )</span><span class="magenta">/   |  /   |</span>\n' +
+            '<span class="cyan">  / /_/ / / / / __  </span><span class="magenta">/ /| | / /| |</span>\n' +
+            '<span class="cyan"> / _, _/ /_/ / /_/ /</span><span class="magenta"> ___ |/ ___ |</span>\n' +
+            '<span class="cyan">/_/ |_|\\____/_____/</span><span class="magenta">_/  |_/_/  |_|</span>\n';
+
+        const commandsData = [
+            {
+                prompt: "cat profile.sys",
+                output: 
+                    '<div class="output-block">' +
+                        '<div style="display: flex; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 2rem;">' +
+                            '<div class="profile-pic-container">' +
+                                '<img src="robaa.jpg" class="profile-pic" alt="Robaa">' +
+                                '<div class="profile-pic-overlay"></div>' +
+                            '</div>' +
+                            '<div class="ascii-art" style="margin-bottom: 0;">' + asciiArt + '</div>' +
+                        '</div>' +
+                        '<div class="table-row"><span class="table-key">NAME:</span><span class="table-value highlight">Abdelhamid Robaa</span></div>' +
+                        '<div class="table-row"><span class="table-key">CLASS:</span><span class="table-value">Backend-focused Computer Science Graduate</span></div>' +
+                        '<div class="table-row"><span class="table-key">LOCATION:</span><span class="table-value">Giza, Egypt</span></div>' +
+                        '<div class="table-row"><span class="table-key">EDUCATION:</span><span class="table-value">BSc Computer Science (GPA: 3.47/4) | ITI Open Source Track</span></div>' +
+                        '<br>' +
+                        '<div class="highlight">Backend-focused Computer Science graduate with hands-on experience building scalable distributed systems using Go, Node.js, PostgreSQL, Redis, and Docker. <br>' +
+                        'Built production-grade microservices, caching systems, and contributed merged PRs to open-source infrastructure tooling.</div>' +
+                    '</div>'
+            },
+            {
+                prompt: "./scripts/list_skills.sh",
+                output: 
+                    '<div class="output-block" style="line-height: 2;">' +
+                        '<div style="margin-bottom: 0.5rem;">' +
+                            '<span class="magenta" style="display: inline-block; width: 120px;">➜ LANGUAGES</span>' +
+                            '<span class="cyan skill-tag">Go</span>' +
+                            '<span class="highlight skill-tag">TypeScript</span>' +
+                            '<span class="highlight skill-tag">JavaScript</span>' +
+                            '<span class="highlight skill-tag">SQL</span>' +
+                            '<span class="dim skill-tag">Java</span>' +
+                            '<span class="dim skill-tag">C++</span>' +
+                        '</div>' +
+                        '<div style="margin-bottom: 0.5rem;">' +
+                            '<span class="cyan" style="display: inline-block; width: 120px;">➜ FRAMEWORKS</span>' +
+                            '<span class="highlight skill-tag">Node.js</span>' +
+                            '<span class="highlight skill-tag">Express.js</span>' +
+                            '<span class="cyan skill-tag">Gin</span>' +
+                            '<span class="cyan skill-tag">Fiber</span>' +
+                        '</div>' +
+                        '<div style="margin-bottom: 0.5rem;">' +
+                            '<span class="yellow" style="display: inline-block; width: 120px;">➜ DATABASES</span>' +
+                            '<span class="highlight skill-tag">PostgreSQL</span>' +
+                            '<span class="highlight skill-tag">MongoDB</span>' +
+                            '<span class="highlight skill-tag">Redis</span>' +
+                        '</div>' +
+                        '<div>' +
+                            '<span class="text-main" style="display: inline-block; width: 120px;">➜ TOOLS</span>' +
+                            '<span class="highlight skill-tag">Docker</span>' +
+                            '<span class="highlight skill-tag">Linux</span>' +
+                            '<span class="highlight skill-tag">Git</span>' +
+                        '</div>' +
+                    '</div>'
+            },
+            {
+                prompt: "cat /var/log/projects.log",
+                output: 
+                    '<div class="output-block">' +
+                        '<div class="exp-entry">' +
+                            '<div class="exp-header">' +
+                                '<span class="exp-role">Open Source Contributor (Go)</span>' +
+                                '<span class="exp-date">Jan 2026 - Apr 2026</span>' +
+                            '</div>' +
+                            '<div class="exp-company">@ Unikraft / KraftKit</div>' +
+                            '<ul class="exp-details">' +
+                                '<li>Implemented per-invocation toolchain overrides by adding the --toolchain flag, improving build customization and CLI flexibility.</li>' +
+                                '<li>Contributed enhancements and fixes to KraftKit’s build/configuration workflow in a production-grade Go codebase.</li>' +
+                                '<li>Collaborated through GitHub code review workflow, submitting merged pull requests to an active open-source project.</li>' +
+                            '</ul>' +
+                        '</div>' +
+                        '<div class="exp-entry">' +
+                            '<div class="exp-header">' +
+                                '<span class="exp-role">Motager - Shopify Clone with Microservices</span>' +
+                                '<span class="exp-date">Oct 2024 - Jul 2025</span>' +
+                            '</div>' +
+                            '<div class="exp-company">@ Personal Project (Go, PostgreSQL, MongoDB, Docker)</div>' +
+                            '<ul class="exp-details">' +
+                                '<li>Engineered Motager, a scalable e-commerce platform using microservices architecture for modular development.</li>' +
+                                '<li>Designed and deployed distributed databases with PostgreSQL and MongoDB, incorporating sharding and replication.</li>' +
+                                '<li>Developed backend services for authentication, product management, and order processing using DDD.</li>' +
+                            '</ul>' +
+                        '</div>' +
+                    '</div>'
+            },
+            {
+                prompt: "ping -c 1 robaa.contact.net",
+                output: 
+                    '<div class="output-block">' +
+                        '<div class="table-row"><span class="table-key">EMAIL:</span><span class="table-value"><a href="mailto:abdelhamidrobaa.mail@gmail.com">abdelhamidrobaa.mail@gmail.com</a></span></div>' +
+                        '<div class="table-row"><span class="table-key">GITHUB:</span><span class="table-value"><a href="https://github.com/robaa12" target="_blank">github.com/robaa12</a></span></div>' +
+                        '<div class="table-row"><span class="table-key">LINKEDIN:</span><span class="table-value"><a href="https://linkedin.com/in/abdelhamid-robaa" target="_blank">linkedin.com/in/abdelhamid-robaa</a></span></div>' +
+                        '<div class="table-row"><span class="table-key">YOUTUBE:</span><span class="table-value"><a href="https://youtube.com/@CodewithRobaa" target="_blank">youtube.com/@CodewithRobaa</a></span></div>' +
+                        '<div class="table-row"><span class="table-key">PHONE:</span><span class="table-value">+20 103 060 7541</span></div>' +
+                        '<br>' +
+                        '<span class="cyan">--- robaa.contact.net ping statistics ---</span><br>' +
+                        '1 packets transmitted, 1 received, <span class="highlight">0% packet loss</span>, time 0ms' +
+                    '</div>'
+            }
+        ];
+
+        const generatePromptHTML = (isInteractive = false) => {
+            const inputElement = isInteractive 
+                ? '<input type="text" class="command-input-field" autofocus autocomplete="off" spellcheck="false">'
+                : '<span class="command-input"></span>';
+
+            return '<div class="prompt-line">' +
+                        '<span class="prompt-user">guest</span>' +
+                        '<span class="dim">@</span>' +
+                        '<span class="prompt-host">robaa-os</span>' +
+                        '<span class="prompt-char">:</span>' +
+                        '<span class="prompt-dir">~/cv</span>' +
+                        '<span class="prompt-char">$</span>' +
+                        inputElement +
+                    '</div>';
+        };
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        async function typeText(element, text, speed = 30) {
+            let cursor = document.createElement('span');
+            cursor.className = 'cursor typing';
+            element.appendChild(cursor);
+            
+            for (let i = 0; i < text.length; i++) {
+                let charNode = document.createTextNode(text.charAt(i));
+                element.insertBefore(charNode, cursor);
+                await sleep(speed + (Math.random() * 20)); 
+            }
+            
+            cursor.classList.remove('typing');
+        }
+
+        function createInteractivePrompt() {
+            const promptDiv = document.createElement('div');
+            promptDiv.innerHTML = generatePromptHTML(true);
+            terminal.appendChild(promptDiv);
+            
+            activeInput = promptDiv.querySelector('.command-input-field');
+            activeInput.focus();
+            
+            activeInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const cmd = this.value.trim();
+                    this.disabled = true; // Lock the input
+                    processCommand(cmd);
+                }
+            });
+            
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        function processCommand(cmd) {
+            const outputDiv = document.createElement('div');
+            outputDiv.className = 'output-block';
+            let output = '';
+            
+            const lowerCmd = cmd.toLowerCase().trim();
+            const args = lowerCmd.split(' ');
+            
+            if (lowerCmd === '') {
+                outputDiv.style.display = 'none';
+            } else if (lowerCmd === 'help') {
+                output = '<span class="cyan">Available commands:</span><br>' +
+                         '  <span class="yellow">help</span>             - Display this help message<br>' +
+                         '  <span class="yellow">theme</span>            - Manage terminal themes (ricing)<br>' +
+                         '  <span class="yellow">clear</span>            - Clear terminal output<br>' +
+                         '  <span class="yellow">whoami</span>           - Display current user identity<br>' +
+                         '  <span class="yellow">ls</span>               - List directory contents<br>' +
+                         '  <span class="yellow">cat profile.sys</span>  - View main profile data<br>' +
+                         '  <span class="yellow">cat projects.log</span> - View project and open source history<br>' +
+                         '  <span class="yellow">./scripts/list_skills.sh</span> - View technical skills<br>' +
+                         '  <span class="yellow">ping robaa</span>       - View contact information<br>' +
+                         '  <span class="yellow">repo</span>             - Go to GitHub repository<br>' +
+                         '  <span class="yellow">sudo</span>             - Execute a command as superuser';
+            } else if (args[0] === 'theme') {
+                if (args.length === 1 || args[1] === 'ls' || args[1] === 'list') {
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'hacker';
+                    output = '<span class="cyan">Available themes:</span><br>' +
+                             '  * <span class="' + (currentTheme === 'hacker' ? 'highlight' : 'dim') + '">hacker</span>' + (currentTheme === 'hacker' ? ' (active)' : '') + '<br>' +
+                             '  * <span class="' + (currentTheme === 'dracula' ? 'magenta' : 'dim') + '">dracula</span>' + (currentTheme === 'dracula' ? ' (active)' : '') + '<br>' +
+                             '  * <span class="' + (currentTheme === 'nord' ? 'cyan' : 'dim') + '">nord</span>' + (currentTheme === 'nord' ? ' (active)' : '') + '<br>' +
+                             '  * <span class="' + (currentTheme === 'gruvbox' ? 'yellow' : 'dim') + '">gruvbox</span>' + (currentTheme === 'gruvbox' ? ' (active)' : '') + '<br>' +
+                             '  * <span class="' + (currentTheme === 'catppuccin' ? 'highlight' : 'dim') + '">catppuccin</span>' + (currentTheme === 'catppuccin' ? ' (active)' : '') + '<br><br>' +
+                             'Usage: <span class="highlight">theme set &lt;name&gt;</span>';
+                } else if (args[1] === 'set' && args[2]) {
+                    const validThemes = ['hacker', 'dracula', 'nord', 'gruvbox', 'catppuccin'];
+                    if (validThemes.includes(args[2])) {
+                        document.documentElement.setAttribute('data-theme', args[2]);
+                        localStorage.setItem('terminalTheme', args[2]);
+                        output = 'Theme successfully switched to <span class="highlight">' + args[2] + '</span>.';
+                    } else {
+                        output = '<span class="error">Unknown theme: ' + args[2] + '</span><br>' +
+                                 'Type <span class="highlight">theme ls</span> to see available options.';
+                    }
+                } else {
+                    output = 'Usage: <span class="highlight">theme ls</span> or <span class="highlight">theme set &lt;name&gt;</span>';
+                }
+            } else if (lowerCmd === 'clear') {
+                terminal.innerHTML = '';
+                outputDiv.style.display = 'none';
+            } else if (lowerCmd === 'whoami') {
+                output = 'guest<br><span class="dim">Browsing Abdelhamid Robaa\'s terminal environment.</span>';
+            } else if (lowerCmd === 'ls' || lowerCmd === 'ls -la' || lowerCmd === 'ls -l') {
+                output = 'profile.sys  <span class="cyan">scripts/</span>  projects.log  <span class="dim">.secret_cookie</span>';
+            } else if (lowerCmd === 'date') {
+                output = new Date().toString();
+            } else if (lowerCmd.startsWith('sudo ')) {
+                output = '<span class="error">guest is not in the sudoers file. This incident will be reported.</span><br>' +
+                         '<span class="dim">...initiating trace...</span>';
+            } else if (lowerCmd === 'sudo') {
+                output = 'usage: sudo -h | -K | -k | -V | -v | -L | -l | -h | ...';
+            } else if (lowerCmd === 'cat .secret_cookie' || lowerCmd === './.secret_cookie') {
+                output = '<span class="magenta">Achievement Unlocked: Snooper 🎉</span><br>' +
+                         'Here is your reward: 🍪<br>' +
+                         '<span class="dim">Don\'t tell anyone you found this.</span>';
+            } else if (lowerCmd === 'matrix') {
+                output = '<span class="text-main">Wake up, Neo...</span><br>' +
+                         '<span class="dim">The Matrix has you...</span><br>' +
+                         '<span class="cyan">Follow the white rabbit.</span>';
+                document.documentElement.setAttribute('data-theme', 'hacker');
+                localStorage.setItem('terminalTheme', 'hacker');
+            } else if (lowerCmd === 'rm -rf /' || lowerCmd === 'rm -rf /*') {
+                output = '<span class="error">Permission denied:</span> Nice try. I like my files exactly where they are.';
+            } else if (lowerCmd === 'reboot' || lowerCmd === 'restart') {
+                output = 'System is going down for reboot NOW!';
+                setTimeout(() => location.reload(), 1500);
+            } else if (lowerCmd === 'repo') {
+                output = 'Opening GitHub repository...';
+                setTimeout(() => window.open('https://github.com/robaa12', '_blank'), 1000);
+            } else if (lowerCmd === 'cat profile.sys') {
+                output = commandsData[0].output;
+            } else if (lowerCmd === './scripts/list_skills.sh' || lowerCmd === 'scripts/list_skills.sh' || lowerCmd === 'sh ./scripts/list_skills.sh') {
+                output = commandsData[1].output;
+            } else if (lowerCmd === 'cat /var/log/projects.log' || lowerCmd === 'cat projects.log') {
+                output = commandsData[2].output;
+            } else if (lowerCmd.startsWith('ping')) {
+                output = commandsData[3].output;
+            } else {
+                output = '<span class="error">bash: ' + cmd + ': command not found</span><br>' +
+                         'Type <span class="highlight">help</span> to see available commands.';
+            }
+            
+            if (output) {
+                outputDiv.innerHTML = output;
+                terminal.appendChild(outputDiv);
+            }
+            
+            createInteractivePrompt();
+        }
+
+        async function runTerminal() {
+            try {
+                // If it's a reload/reboot and we already have a theme, maybe we skip the boot sequence?
+                // Let's run it anyway, it's cool.
+                for (let i = 0; i < commandsData.length; i++) {
+                    const cmd = commandsData[i];
+                    
+                    const promptDiv = document.createElement('div');
+                    promptDiv.innerHTML = generatePromptHTML(false);
+                    terminal.appendChild(promptDiv);
+                    
+                    const inputSpan = promptDiv.querySelector('.command-input');
+                    
+                    window.scrollTo(0, document.body.scrollHeight);
+                    
+                    await sleep(500);
+                    await typeText(inputSpan, cmd.prompt, 40);
+                    
+                    const oldCursor = inputSpan.querySelector('.cursor');
+                    if (oldCursor) oldCursor.remove();
+                    
+                    await sleep(200);
+                    const outputDiv = document.createElement('div');
+                    outputDiv.innerHTML = cmd.output;
+                    terminal.appendChild(outputDiv);
+                    
+                    window.scrollTo(0, document.body.scrollHeight);
+                    await sleep(800);
+                }
+                
+                // Add system message before handing over control
+                const handoverDiv = document.createElement('div');
+                handoverDiv.className = 'output-block dim';
+                handoverDiv.style.marginTop = '1rem';
+                handoverDiv.innerHTML = 'System initialization complete. Terminal is now interactive. Type <span class="highlight">help</span> to begin.';
+                terminal.appendChild(handoverDiv);
+
+                // Start interactive mode
+                createInteractivePrompt();
+                
+            } catch (error) {
+                console.error("Terminal sequence failed:", error);
+                terminal.innerHTML += '<div class="error">System failure: ' + error.message + '</div>';
+            }
+        }
+
+        // Initialize and keep focus
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runTerminal, 1000);
+        });
+
+        // Click anywhere to focus the input field
+        document.addEventListener('click', () => {
+            if (activeInput && !activeInput.disabled) {
+                activeInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
