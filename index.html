@@ -8,6 +8,22 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap');
 
+        /* Default (Catppuccin Macchiato) */
+        :root, [data-theme="catppuccin"] {
+            --bg-color: #24273a;
+            --text-main: #cad3f5;
+            --text-dim: #5b6078;
+            --text-highlight: #f4dbd6;
+            --accent-cyan: #8aadf4;
+            --accent-magenta: #f5bde6;
+            --accent-yellow: #eed49f;
+            --error: #ed8796;
+            
+            --glow-main: none;
+            --glow-cyan: none;
+            --glow-magenta: none;
+        }
+
         /* Hacker Theme */
         [data-theme="hacker"] {
             --bg-color: #030303;
@@ -72,22 +88,8 @@
             --glow-magenta: none;
         }
 
-        /* Default (Catppuccin Macchiato) */
-        :root, [data-theme="catppuccin"] {
-            --bg-color: #24273a;
-            --text-main: #cad3f5;
-            --text-dim: #5b6078;
-            --text-highlight: #f4dbd6;
-            --accent-cyan: #8aadf4;
-            --accent-magenta: #f5bde6;
-            --accent-yellow: #eed49f;
-            --error: #ed8796;
-            
-            --glow-main: none;
-            --glow-cyan: none;
-            --glow-magenta: none;
-        }
-
+        /* Catppuccin Macchiato was moved to the top as default */
+        
         * {
             box-sizing: border-box;
             margin: 0;
